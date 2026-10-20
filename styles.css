@@ -118,7 +118,7 @@ header.top+.page{padding-top:8px}
 .adv summary{color:var(--muted);font-size:13px;cursor:pointer}
 .err{color:var(--red);font-weight:600}
 .facts{padding-left:20px}.facts li{margin:5px 0}
-.logo{width:64px;height:64px;border-radius:16px;background:url(icon-192.png?v=1) center/cover}
+.logo{width:64px;height:64px;border-radius:16px;background:url(icon-192.png?v=2) center/cover}
 code{font-size:13px}
 #toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translate(-50%,20px);opacity:0;background:#1d1f23;color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;z-index:40;transition:.25s;pointer-events:none;max-width:90vw}
 #toast.show{opacity:1;transform:translate(-50%,0)}

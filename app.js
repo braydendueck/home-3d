@@ -72,9 +72,12 @@ function taskStatus(t, t0 = today(), D = S.data) {
       if (done) { r = { st: 'clear', txt: `Done ${fmt(done)}` }; break; }
       if (s.by) {
         const by = parseISO(s.by), n = days(t0, by);
-        if (n < 0) r = t.verdict === 'E' ? { st: 'red', txt: `Overdue. Target was ${fmt(by)}.`, due: by } : { st: 'yellow', txt: `Past the target of ${fmt(by)}`, due: by };
+        if (n < 0) r = s.noRed ? { st: 'orange', txt: `Past the target of ${fmt(by)}. Still to do.`, due: by } : t.verdict === 'E' ? { st: 'red', txt: `Overdue. Target was ${fmt(by)}.`, due: by } : { st: 'yellow', txt: `Past the target of ${fmt(by)}`, due: by };
         else if (n <= soon) r = { st: 'orange', txt: `Due by ${fmt(by)} (${inDays(n)})`, due: by };
         else r = { st: 'yellow', txt: `Due by ${fmt(by)}`, due: by };
+      } else if (s.hot) {
+        const ws = concreteWindows(s.hot, t0), cur = ws.find(w => w.start <= t0 && t0 <= w.end), nx = ws.find(w => w.start > t0);
+        r = cur ? { st: 'orange', txt: `Book it by ${fmt(cur.end)}`, due: cur.end } : { st: 'yellow', txt: nx ? `To do. Book it from ${fmt(nx.start, nx.start.getFullYear() !== t0.getFullYear())}.` : 'To do once' };
       } else r = { st: 'yellow', txt: 'To do once' };
       break;
     }
@@ -86,9 +89,10 @@ function taskStatus(t, t0 = today(), D = S.data) {
       if (cur) {
         if (done && done >= cur.start) { r = { st: 'clear', txt: `Done ${fmt(done)}${nx ? `. Next from ${fmt(nx.start, nx.start.getFullYear() !== t0.getFullYear())}` : ''}` }; break; }
         const n = days(t0, cur.end);
-        r = n <= soon ? { st: 'orange', txt: `Due by ${fmt(cur.end)} (${inDays(n)})`, due: cur.end } : { st: 'yellow', txt: `Do by ${fmt(cur.end)}`, due: cur.end };
+        r = s.inWindow === 'orange' ? { st: 'orange', txt: `This month: do by ${fmt(cur.end)} (${inDays(n)})`, due: cur.end } : n <= soon ? { st: 'orange', txt: `Due by ${fmt(cur.end)} (${inDays(n)})`, due: cur.end } : { st: 'yellow', txt: `Do by ${fmt(cur.end)}`, due: cur.end };
         break;
       }
+      if (s.outside === 'yellow' && nx) { r = { st: 'yellow', txt: `Next: ${fmt(nx.start, nx.start.getFullYear() !== t0.getFullYear())} to ${fmt(nx.end)}`, due: nx.end }; break; }
       if (prev && days(prev.end, t0) <= grace && !(done && done >= prev.start) && t.verdict === 'E') {
         r = { st: 'red', txt: `Overdue. It was due by ${fmt(prev.end)}.`, due: prev.end }; break;
       }
@@ -111,7 +115,7 @@ function taskStatus(t, t0 = today(), D = S.data) {
     }
     default: r = { st: 'clear', txt: '' };
   }
-  if (t.verdict === 'O' && (r.st === 'red' || r.st === 'orange')) r = { ...r, st: 'yellow', txt: r.txt + ' (optional)' };
+  if (t.verdict === 'O' && !t.noCap && (r.st === 'red' || r.st === 'orange')) r = { ...r, st: 'yellow', txt: r.txt + ' (optional)' };
   return r;
 }
 function everyTxt(n) { return n === 30 ? 'month' : n === 60 ? '2 months' : n === 90 ? '3 months' : n === 182 ? '6 months' : n === 365 ? 'year' : `${n} days`; }
