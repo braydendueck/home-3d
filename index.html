@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Home">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=1">
+<title>Home 3D</title>
+<link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+<div id="app"></div>
+<script src="three-bundle.min.js?v=1"></script>
+<script src="app.js?v=1"></script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('./sw.js');</script>
+</body>
+</html>
